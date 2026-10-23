@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="eu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DominoTest FP - Test Psicotécnicos & Psikoteknikoak</title>
+  <style>
+    /* Reset & Base */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: #f1f5f9;
+      color: #1e293b;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Container */
+    .container {
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    /* Header */
+    header {
+      background: #ffffff;
+      border-bottom: 2px solid #e2e8f0;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .top-badge {
+      background: #0f172a;
+      color: #94a3b8;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 6px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .top-badge .highlight { color: #facc15; }
+    .header-main {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #2563eb, #4f46e5);
+      color: #fff;
+      font-size: 22px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      box-shadow: 0 4px 6px -1px rgba(37,99,235,0.2);
+    }
+    .brand-title {
+      font-size: 18px;
+      font-weight: 900;
+      color: #0f172a;
+      letter-spacing: -0.5px;
+    }
+    .brand-sub {
+      font-size: 12px;
+      color: #64748b;
+    }
+
+    /* Language Switcher & Controls */
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .lang-btn {
+      padding: 5px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      border-radius: 6px;
+      border: 1px solid #cbd5e1;
+      background: #f8fafc;
+      color: #475569;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .lang-btn.active {
+      background: #2563eb;
+      color: #ffffff;
+      border-color: #2563eb;
+    }
+    .icon-btn {
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      border-radius: 6px;
+      border: 1px solid #cbd5e1;
+      background: #f8fafc;
+      color: #334155;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .icon-btn:hover { background: #e2e8f0; }
+
+    /* Nav Tabs */
+    .nav-tabs {
+      display: flex;
+      gap: 8px;
+      background: #ffffff;
+      padding: 8px 16px 12px;
+      border-bottom: 1px solid #e2e8f0;
+      overflow-x: auto;
+    }
+    .tab-btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      border: none;
+      background: #f1f5f9;
+      color: #475569;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+    .tab-btn.active {
+      background: #2563eb;
+      color: #ffffff;
+    }
+
+    /* Cards */
+    .card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+
+    /* Filters Bar */
+    .filters-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 20px;
+      font-size: 13px;
+    }
+    .filter-btn {
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid #cbd5e1;
+      background: #f8fafc;
+      color: #475569;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .filter-btn.active {
+      background: #0f172a;
+      color: #ffffff;
+      border-color: #0f172a;
+    }
+
+    /* Domino Sequence Container */
+    .domino-stage {
+      background: #f8fafc;
+      border: 2px dashed #cbd5e1;
+      border-radius: 16px;
+      padding: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .arrow-sep {
+      font-size: 24px;
+      font-weight: 900;
+      color: #2563eb;
+    }
+
+    /* Options Grid */
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin: 20px 0;
+    }
+    @media (min-width: 600px) {
+      .options-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+    .option-card {
+      border: 2px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 16px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      background: #ffffff;
+      transition: all 0.15s ease;
+      position: relative;
+    }
+    .option-card:hover {
+      border-color: #94a3b8;
+      background: #f8fafc;
+      transform: translateY(-2px);
+    }
+    .option-card.selected {
+      border-color: #2563eb;
+      background: #eff6ff;
+    }
+    .option-card.correct {
+      border-color: #16a34a !important;
+      background: #f0fdf4 !important;
+      box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.3) !important;
+    }
+    .option-card.wrong {
+      border-color: #dc2626 !important;
+      background: #fef2f2 !important;
+      box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.3) !important;
+    }
+    .option-card.dimmed {
+      opacity: 0.45;
+      cursor: default;
+    }
+    .option-letter {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: #e2e8f0;
+      color: #334155;
+      font-size: 13px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .option-card.selected .option-letter {
+      background: #2563eb;
+      color: #ffffff;
+    }
+    .option-card.correct .option-letter {
+      background: #16a34a !important;
+      color: #ffffff !important;
+    }
+    .option-card.wrong .option-letter {
+      background: #dc2626 !important;
+      color: #ffffff !important;
+    }
+
+    /* Feedback Banner */
+    .feedback-box {
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 16px;
+      display: none;
+    }
+    .feedback-box.correct {
+      display: block;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      color: #166534;
+    }
+    .feedback-box.wrong {
+      display: block;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #991b1b;
+    }
+    .explanation-card {
+      background: #0f172a;
+      color: #f8fafc;
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 14px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .explanation-card .tag {
+      color: #facc15;
+      font-weight: 800;
+      text-transform: uppercase;
+      font-size: 11px;
+      margin-bottom: 6px;
+      display: block;
+    }
+    .explanation-detail {
+      margin-top: 8px;
+      background: #1e293b;
+      padding: 10px;
+      border-radius: 8px;
+      color: #6ee7b7;
+      font-family: monospace;
+      font-size: 12px;
+    }
+
+    /* Buttons */
+    .btn {
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .btn-primary {
+      background: #2563eb;
+      color: #ffffff;
+    }
+    .btn-primary:hover { background: #1d4ed8; }
+    .btn-secondary {
+      background: #e2e8f0;
+      color: #334155;
+    }
+    .btn-secondary:hover { background: #cbd5e1; }
+
+    /* Modulo 7 Clock Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15,23,42,0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 16px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-content {
+      background: #ffffff;
+      border-radius: 20px;
+      width: 100%;
+      max-width: 460px;
+      padding: 24px;
+      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+      position: relative;
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 22px;
+      font-weight: bold;
+      color: #64748b;
+      cursor: pointer;
+    }
+
+    /* Progress bar */
+    .session-badge {
+      font-size: 13px;
+      font-weight: 700;
+      background: #f1f5f9;
+      padding: 4px 12px;
+      border-radius: 20px;
+      border: 1px solid #cbd5e1;
+    }
+
+    /* Print styling */
+    @media print {
+      header, .filters-bar, .btn, .nav-tabs, .top-badge { display: none !important; }
+      body { background: #fff; }
+      .card { border: none; box-shadow: none; padding: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Ribbon -->
+  <div class="top-badge">
+    <span>LANBIDE HEZIKETA / FORMACIÓN PROFESIONAL • <span class="highlight">MODULO 7</span></span>
+    <span>DOMINO TEST FP (PAGES EDITION)</span>
+  </div>
+
+  <!-- Header -->
+  <header>
+    <div class="container header-main">
+      <div class="brand">
+        <div class="brand-icon">⚅</div>
+        <div>
+          <div class="brand-title" id="lbl-app-title">DOMINO TEST FP</div>
+          <div class="brand-sub" id="lbl-app-sub">Arrazoiamendu abstraktuaren praktika</div>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button class="icon-btn" onclick="toggleClockModal()">
+          <span>⏰</span> <span id="lbl-clock-btn">Erloju Logikoa (Mod 7)</span>
+        </button>
+        <button class="lang-btn active" id="btn-lang-eu" onclick="setLang('eu')">EUS</button>
+        <button class="lang-btn" id="btn-lang-es" onclick="setLang('es')">CAS</button>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="container nav-tabs">
+      <button class="tab-btn active" id="tab-practice" onclick="switchView('practice')">🎯 Praktika Librea / Práctica</button>
+      <button class="tab-btn" id="tab-exam" onclick="switchView('exam')">⏱️ Azterketa / Test (10 galdera)</button>
+      <button class="tab-btn" id="tab-theory" onclick="switchView('theory')">📖 Patroien Gida / Guía</button>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="container" style="flex: 1; padding-top: 20px;">
+
+    <!-- VIEW 1: PRACTICE MODE -->
+    <section id="view-practice">
+      <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 14px;">
+          <div>
+            <span id="lbl-cat-badge" style="background: #eff6ff; color: #1d4ed8; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 800; border: 1px solid #bfdbfe;">
+              SEGIDA INDEPENDENTEA
+            </span>
+            <span id="lbl-q-number" style="font-size: 12px; color: #64748b; font-weight: 700; margin-left: 8px;">Ariketa #001</span>
+          </div>
+          <div class="session-badge" id="lbl-session-score">
+            Zuzenak: 0 / 0 (0%)
+          </div>
+        </div>
+
+        <!-- Filter bar -->
+        <div class="filters-bar" id="filters-container">
+          <!-- Populated by JS -->
+        </div>
+
+        <p id="lbl-instructions" style="font-size: 14px; font-weight: 700; color: #334155; margin-bottom: 6px;">
+          Zein da segidari jarraitzen dion fitxa?
+        </p>
+
+        <!-- Domino sequence -->
+        <div class="domino-stage" id="sequence-stage">
+          <!-- Injected via JS -->
+        </div>
+
+        <!-- 4 Options -->
+        <div class="options-grid" id="options-container">
+          <!-- Injected via JS -->
+        </div>
+
+        <!-- Feedback and explanation -->
+        <div class="feedback-box" id="feedback-alert">
+          <strong id="feedback-title">ZUZEN!</strong>
+          <span id="feedback-msg">Bikain arrazoitua.</span>
+        </div>
+
+        <div class="explanation-card" id="explanation-box" style="display: none;">
+          <span class="tag" id="lbl-explanation-title">AZALPEN MATEMATIKOA (MODULO 7):</span>
+          <div id="explanation-text"></div>
+          <div class="explanation-detail" id="explanation-detail"></div>
+        </div>
+
+        <!-- Action bar -->
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+          <button class="btn btn-primary" id="btn-next-question" onclick="nextPracticeQuestion()">
+            Hurrengo ariketa ➔
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 2: EXAM SIMULATION (10 or 20 questions) -->
+    <section id="view-exam" style="display: none;">
+      <div class="card">
+        <div id="exam-intro" style="text-align: center; padding: 20px 0;">
+          <div style="font-size: 40px; margin-bottom: 10px;">⏱️</div>
+          <h2 style="font-size: 22px; font-weight: 900; color: #0f172a; margin-bottom: 8px;" id="lbl-exam-title">
+            Azterketa Azkarra (10 Galdera)
+          </h2>
+          <p style="color: #64748b; font-size: 14px; max-width: 500px; margin: 0 auto 20px;" id="lbl-exam-sub">
+            600 ariketako katalogotik 10 galdera ausaz hautatuko dira. Bukaeran zure FP baremoa eta emaitza osoak jasoko dituzu.
+          </p>
+          <button class="btn btn-primary" style="font-size: 16px; padding: 12px 28px;" onclick="startExam(10)" id="btn-start-exam">
+            Hasi Azterketa ➔
+          </button>
+        </div>
+
+        <div id="exam-runner" style="display: none;">
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 16px;">
+            <div style="font-weight: 800; font-size: 15px;" id="lbl-exam-progress">Ariketa 1 / 10</div>
+            <div style="font-family: monospace; font-size: 15px; font-weight: 700; color: #2563eb;" id="exam-timer">15:00</div>
+          </div>
+
+          <div class="domino-stage" id="exam-sequence-stage"></div>
+          <div class="options-grid" id="exam-options-container"></div>
+
+          <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+            <button class="btn btn-secondary" onclick="prevExamQ()" id="btn-exam-prev">Aurrekoa</button>
+            <button class="btn btn-primary" onclick="nextExamQ()" id="btn-exam-next">Hurrengoa ➔</button>
+          </div>
+        </div>
+
+        <div id="exam-results" style="display: none; text-align: center; padding: 20px 0;">
+          <div style="font-size: 44px; margin-bottom: 10px;">🏆</div>
+          <h2 style="font-size: 26px; font-weight: 900; color: #0f172a;" id="lbl-results-title">Emaitzak</h2>
+          <div style="font-size: 48px; font-weight: 900; color: #2563eb; margin: 12px 0;" id="exam-score-display">8 / 10</div>
+          <div style="padding: 12px 20px; border-radius: 12px; display: inline-block; font-weight: 800; font-size: 15px; margin-bottom: 24px;" id="exam-grade-badge">
+            Oso Ondo / Muy Bien
+          </div>
+          <br>
+          <button class="btn btn-primary" onclick="startExam(10)" id="btn-retry-exam">Egin beste azterketa bat ➔</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 3: THEORY GUIDE -->
+    <section id="view-theory" style="display: none;">
+      <div class="card">
+        <h2 style="font-size: 20px; font-weight: 900; margin-bottom: 8px;" id="lbl-theory-heading">
+          Dominó Psicotéknikoen Teoria eta Patroiak
+        </h2>
+        <p style="color: #64748b; font-size: 14px; margin-bottom: 20px;" id="lbl-theory-lead">
+          Dominó ariketak ebazteko funtsezko printzipioak eta 7 moduluaren zikloa.
+        </p>
+
+        <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 12px; padding: 16px; margin-bottom: 20px;">
+          <h3 style="color: #1e40af; font-size: 15px; font-weight: 800; margin-bottom: 6px;" id="lbl-t1-h">
+            1. Urrezko Araua: 7 Modulua (0tik 6ra)
+          </h3>
+          <p style="font-size: 13px; color: #1e3a8a; line-height: 1.5;" id="lbl-t1-p">
+            Dominóan ez dago 7 zenbakirik: zuriak 0 balio du eta puntu gehien dituenak 6. 6aren ondoren 0 dator berriz ere (6 + 1 = 0), eta 0 baino lehen 6 dago (0 - 1 = 6). Erloju biribil baten modukoa da.
+          </p>
+        </div>
+
+        <div style="display: grid; gap: 14px;">
+          <div style="border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px;">
+            <h4 style="font-size: 14px; font-weight: 800; color: #0f172a; margin-bottom: 4px;" id="lbl-t2-h">
+              2. Segida Independenteak
+            </h4>
+            <p style="font-size: 13px; color: #64748b;" id="lbl-t2-p">
+              Goiko zatiak arau matematiko bat jarraitzen du (+1, +2, -1...) eta beheko zatiak beste arau bat, elkarri eragin gabe.
+            </p>
+          </div>
+
+          <div style="border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px;">
+            <h4 style="font-size: 14px; font-weight: 800; color: #0f172a; margin-bottom: 4px;" id="lbl-t3-h">
+              3. Karakola edo Serpentea (Zig-Zag)
+            </h4>
+            <p style="font-size: 13px; color: #64748b;" id="lbl-t3-p">
+              Kate jarraitu bakarra osatzen dute: 1. fitxaren goikoa ➔ 1. fitxaren behekoa ➔ 2. fitxaren goikoa ➔ 2. fitxaren behekoa...
+            </p>
+          </div>
+
+          <div style="border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px;">
+            <h4 style="font-size: 14px; font-weight: 800; color: #0f172a; margin-bottom: 4px;" id="lbl-t4-h">
+              4. Batuketa Konstantea
+            </h4>
+            <p style="font-size: 13px; color: #64748b;" id="lbl-t4-p">
+              Fitxa bakoitzeko bi zatien baturak emaitza bera ematen du beti (adibidez: 6, edo 7 moduan 0).
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Modulo 7 Clock Modal -->
+  <div class="modal-overlay" id="clock-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 style="font-size: 16px; font-weight: 800;" id="lbl-modal-title">7 Moduluko Erloju Logikoa</h3>
+        <button class="close-btn" onclick="toggleClockModal()">&times;</button>
+      </div>
+      <p style="font-size: 13px; color: #64748b; margin-bottom: 16px;" id="lbl-modal-desc">
+        Dominóaren 7 posizioak (0tik 6ra). Sakatu zenbakietan salto modularrak ikusteko:
+      </p>
+
+      <div style="text-align: center; margin: 10px 0;" id="clock-svg-box">
+        <!-- Injected via JS -->
+      </div>
+
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px; text-align: center;">
+        <span style="font-size: 12px; font-weight: 700; color: #475569;" id="lbl-modal-calc-text">Salto kalkulua:</span>
+        <div style="font-size: 18px; font-weight: 900; color: #2563eb; margin-top: 4px;" id="clock-calc-result">
+          6 + 1 = 0 (Mod 7)
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vanilla JS Engine -->
+  <script>
+    // --- 1. DICCIONARIO BILINGÜE COMPLETO ---
+    let currentLang = 'eu';
+    const I18N = {
+      eu: {
+        appTitle: "DOMINO TEST FP",
+        appSub: "Arrazoiamendu abstraktuaren praktika • Lanbide Heziketa",
+        clockBtn: "Erloju Logikoa (Mod 7)",
+        tabPractice: "🎯 Praktika Librea",
+        tabExam: "⏱️ Azterketa (10 galdera)",
+        tabTheory: "📖 Patroien Gida",
+        instruction: "Zein da segidari jarraitzen dion fitxa?",
+        exercise: "Ariketa",
+        correct: "Zuzenak",
+        nextQ: "Hurrengo ariketa ➔",
+        correctFeedback: "ZUZEN! Bikain arrazoitua.",
+        wrongFeedback: "OKERRA! Ikusi beheko azalpen matematikoa.",
+        expTitle: "AZALPEN MATEMATIKOA (7 MODULUA):",
+        allCategories: "Patroi guztiak",
+        catIndep: "Segida Independenteak",
+        catSnake: "Karakola / Serpentea",
+        catSum: "Batuketa Konstantea",
+        catHalves: "Zatien Arteko Erlazioa",
+        catAlt: "Txandakako Seriea",
+        examTitle: "Azterketa Azkarra (10 Galdera)",
+        examSub: "600 ariketako katalogotik 10 galdera ausaz hautatuko dira. Bukaeran zure FP baremoa eta emaitza osoak jasoko dituzu.",
+        startExam: "Hasi Azterketa ➔",
+        prev: "Aurrekoa",
+        next: "Hurrengoa ➔",
+        resultsTitle: "Emaitzak",
+        gradeVeryGood: "Oso Ondo (17-20 / Bikain)",
+        gradeGood: "Ondo (13-16 / Gaitasun ona)",
+        gradeAvg: "Ertaina (9-12 / Praktika gehiago)",
+        gradeLow: "Hobetu beharra (0-8 / Insuficiente)",
+        retryExam: "Egin beste azterketa bat ➔",
+        modalTitle: "7 Moduluko Erloju Logikoa",
+        modalDesc: "Dominóaren 7 posizioak (0tik 6ra). Sakatu zenbakietan salto modularrak ikusteko:"
+      },
+      es: {
+        appTitle: "DOMINO TEST FP",
+        appSub: "Práctica de razonamiento abstracto • Formación Profesional",
+        clockBtn: "Reloj Lógico (Mod 7)",
+        tabPractice: "🎯 Práctica Libre",
+        tabExam: "⏱️ Examen (10 preguntas)",
+        tabTheory: "📖 Guía de Patrones",
+        instruction: "¿Cuál es la ficha que continúa la serie?",
+        exercise: "Ejercicio",
+        correct: "Correctas",
+        nextQ: "Siguiente ejercicio ➔",
+        correctFeedback: "¡CORRECTO! Razonamiento impecable.",
+        wrongFeedback: "¡INCORRECTO! Revisa la explicación matemática inferior.",
+        expTitle: "EXPLICACIÓN MATEMÁTICA (MÓDULO 7):",
+        allCategories: "Todos los patrones",
+        catIndep: "Series Independientes",
+        catSnake: "Caracol / Serpiente",
+        catSum: "Suma Constante",
+        catHalves: "Relación entre Mitades",
+        catAlt: "Serie Alterna",
+        examTitle: "Examen Rápido (10 Preguntas)",
+        examSub: "Se seleccionarán 10 preguntas aleatorias de nuestro catálogo de 600 ejercicios. Al finalizar obtendrás tu nota baremada de FP.",
+        startExam: "Comenzar Examen ➔",
+        prev: "Anterior",
+        next: "Siguiente ➔",
+        resultsTitle: "Resultados",
+        gradeVeryGood: "Muy Bien (17-20 / Sobresaliente)",
+        gradeGood: "Bien (13-16 / Buen nivel)",
+        gradeAvg: "En la media (9-12 / Requiere práctica)",
+        gradeLow: "Insuficiente (0-8 / Reforzar conceptos)",
+        retryExam: "Hacer otro examen ➔",
+        modalTitle: "Reloj Lógico de Módulo 7",
+        modalDesc: "Las 7 posiciones del dominó (del 0 al 6). Haz clic en los números para comprobar saltos:"
+      }
+    };
+
+    function setLang(lang) {
+      currentLang = lang;
+      document.getElementById('btn-lang-eu').className = lang === 'eu' ? 'lang-btn active' : 'lang-btn';
+      document.getElementById('btn-lang-es').className = lang === 'es' ? 'lang-btn active' : 'lang-btn';
+      
+      const t = I18N[lang];
+      document.getElementById('lbl-app-title').innerText = t.appTitle;
+      document.getElementById('lbl-app-sub').innerText = t.appSub;
+      document.getElementById('lbl-clock-btn').innerText = t.clockBtn;
+      document.getElementById('tab-practice').innerText = t.tabPractice;
+      document.getElementById('tab-exam').innerText = t.tabExam;
+      document.getElementById('tab-theory').innerText = t.tabTheory;
+      document.getElementById('lbl-instructions').innerText = t.instruction;
+      document.getElementById('btn-next-question').innerText = t.nextQ;
+      document.getElementById('lbl-explanation-title').innerText = t.expTitle;
+      document.getElementById('lbl-exam-title').innerText = t.examTitle;
+      document.getElementById('lbl-exam-sub').innerText = t.examSub;
+      document.getElementById('btn-start-exam').innerText = t.startExam;
+      document.getElementById('btn-exam-prev').innerText = t.prev;
+      document.getElementById('btn-exam-next').innerText = t.next;
+      document.getElementById('lbl-results-title').innerText = t.resultsTitle;
+      document.getElementById('btn-retry-exam').innerText = t.retryExam;
+      document.getElementById('lbl-modal-title').innerText = t.modalTitle;
+      document.getElementById('lbl-modal-desc').innerText = t.modalDesc;
+
+      renderFilters();
+      renderCurrentPracticeQuestion();
+    }
+
+    // --- 2. RENDERIZADOR SVG VECTORIAL PURO DE DOMINÓ (0-6) ---
+    const PIP_COORDS = {
+      0: [],
+      1: [[20, 20]],
+      2: [[11, 11], [29, 29]],
+      3: [[11, 11], [20, 20], [29, 29]],
+      4: [[11, 11], [29, 11], [11, 29], [29, 29]],
+      5: [[11, 11], [29, 11], [20, 20], [11, 29], [29, 29]],
+      6: [[11, 10], [29, 10], [11, 20], [29, 20], [11, 30], [29, 30]]
+    };
+
+    function renderHalfPips(val, yOffset) {
+      return (PIP_COORDS[val] || []).map(([cx, cy]) =>
+        `<circle cx="${cx}" cy="${cy + yOffset}" r="3.4" fill="#0f172a" />`
+      ).join('');
+    }
+
+    function createDominoSVG(top, bottom, isQuestion = false, width = 46, height = 90, status = '') {
+      if (isQuestion) {
+        return `
+          <svg width="${width}" height="${height}" viewBox="0 0 40 80">
+            <rect x="1" y="1" width="38" height="78" rx="6" fill="#f8fafc" stroke="#64748b" stroke-width="2" stroke-dasharray="3 3"/>
+            <line x1="4" y1="40" x2="36" y2="40" stroke="#cbd5e1" stroke-width="2"/>
+            <text x="20" y="27" text-anchor="middle" dominant-baseline="middle" fill="#2563eb" font-size="20" font-weight="900" font-family="sans-serif">?</text>
+            <text x="20" y="57" text-anchor="middle" dominant-baseline="middle" fill="#2563eb" font-size="20" font-weight="900" font-family="sans-serif">?</text>
+          </svg>
+        `;
+      }
+      let strokeColor = '#94a3b8';
+      let strokeWidth = '2';
+      let tileFill = '#ffffff';
+
+      if (status === 'correct') {
+        strokeColor = '#16a34a';
+        strokeWidth = '2.5';
+        tileFill = '#f0fdf4';
+      } else if (status === 'wrong') {
+        strokeColor = '#dc2626';
+        strokeWidth = '2.5';
+        tileFill = '#fef2f2';
+      }
+
+      return `
+        <svg width="${width}" height="${height}" viewBox="0 0 40 80" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.08));">
+          <rect x="1.5" y="1.5" width="37" height="77" rx="6" fill="${tileFill}" stroke="${strokeColor}" stroke-width="${strokeWidth}"/>
+          <line x1="4" y1="40" x2="36" y2="40" stroke="#cbd5e1" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="20" cy="40" r="2" fill="#eab308" stroke="#854d0e" stroke-width="0.5"/>
+          ${renderHalfPips(top, 0)}
+          ${renderHalfPips(bottom, 40)}
+        </svg>
+      `;
+    }
+
+    // --- 3. MOTOR PROCEDURAL DE GENERACIÓN (MÓDULO 7 - 600 PREGUNTAS) ---
+    const mod7 = (n) => ((n % 7) + 7) % 7;
+
+    function buildQuestion(id) {
+      const seed = id * 104729;
+      const pseudo = (k) => {
+        const s = Math.sin(seed + k) * 10000;
+        return s - Math.floor(s);
+      };
+      const rand = (k, min, max) => Math.floor(pseudo(k) * (max - min + 1)) + min;
+
+      const categories = ['independent', 'snake', 'sum', 'halves', 'alt'];
+      const category = categories[id % categories.length];
+
+      let sequence = [];
+      let answer = [0, 0];
+      let expEu = '';
+      let expEs = '';
+      let detailEu = '';
+      let detailEs = '';
+
+      if (category === 'independent') {
+        const steps = [1, 2, 3, -1, -2, -3];
+        const topStart = mod7(rand(1, 0, 6));
+        const botStart = mod7(rand(2, 0, 6));
+        const deltaTop = steps[rand(3, 0, steps.length - 1)];
+        const deltaBot = steps[rand(4, 0, steps.length - 1)];
+
+        for (let i = 0; i < 4; i++) {
+          sequence.push([mod7(topStart + i * deltaTop), mod7(botStart + i * deltaBot)]);
+        }
+        answer = [mod7(topStart + 4 * deltaTop), mod7(botStart + 4 * deltaBot)];
+
+        expEu = `Serie independentea: Goiko aldea ${deltaTop > 0 ? '+'+deltaTop : deltaTop} doa, eta behekoa ${deltaBot > 0 ? '+'+deltaBot : deltaBot} doa (mod 7).`;
+        expEs = `Serie independiente: La parte superior avanza ${deltaTop > 0 ? '+'+deltaTop : deltaTop} y la inferior ${deltaBot > 0 ? '+'+deltaBot : deltaBot} (mód 7).`;
+        detailEu = `Goikoa: ${sequence.map(s=>s[0]).join('➔')} ➔ [${answer[0]}]. Behekoa: ${sequence.map(s=>s[1]).join('➔')} ➔ [${answer[1]}].`;
+        detailEs = `Superior: ${sequence.map(s=>s[0]).join('➔')} ➔ [${answer[0]}]. Inferior: ${sequence.map(s=>s[1]).join('➔')} ➔ [${answer[1]}].`;
+      } 
+      else if (category === 'snake') {
+        const start = mod7(rand(5, 0, 6));
+        const step = [1, 2, -1][rand(6, 0, 2)];
+        let vals = [];
+        for (let i = 0; i < 10; i++) vals.push(mod7(start + i * step));
+        sequence = [
+          [vals[0], vals[1]],
+          [vals[2], vals[3]],
+          [vals[4], vals[5]],
+          [vals[6], vals[7]]
+        ];
+        answer = [vals[8], vals[9]];
+
+        expEu = `Karakola / Serpentea: Goitik behera zig-zagean ${step > 0 ? '+'+step : step} egiten du balio bakoitzak.`;
+        expEs = `Caracol / Serpiente: Cadena continua en zigzag sumando ${step > 0 ? '+'+step : step} en cada mitad.`;
+        detailEu = `Segida jarraitua: ${vals.slice(0,8).join(' ➔ ')} ➔ [${answer[0]}, ${answer[1]}]`;
+        detailEs = `Cadena continua: ${vals.slice(0,8).join(' ➔ ')} ➔ [${answer[0]}, ${answer[1]}]`;
+      }
+      else if (category === 'sum') {
+        const targetSum = rand(7, 4, 10);
+        const topStart = mod7(rand(8, 0, 6));
+        const topStep = [1, 2, -1][rand(9, 0, 2)];
+        for (let i = 0; i < 4; i++) {
+          let t = mod7(topStart + i * topStep);
+          let b = mod7(targetSum - t);
+          sequence.push([t, b]);
+        }
+        const ansT = mod7(topStart + 4 * topStep);
+        answer = [ansT, mod7(targetSum - ansT)];
+
+        expEu = `Batuketa konstantea: Fitxa guztiek ${targetSum} batzen dute (mod 7). Goikoak ${topStep > 0 ? '+'+topStep : topStep} egiten du.`;
+        expEs = `Suma constante: Todas las fichas suman ${targetSum} (mód 7). La parte superior suma ${topStep > 0 ? '+'+topStep : topStep}.`;
+        detailEu = `Baturak: ${sequence.map(s=>s[0]+'+'+s[1]).join(', ')} ➔ [${answer[0]}+${answer[1]}]`;
+        detailEs = `Sumas: ${sequence.map(s=>s[0]+'+'+s[1]).join(', ')} ➔ [${answer[0]}+${answer[1]}]`;
+      }
+      else if (category === 'halves') {
+        const offset = rand(10, 1, 4);
+        const topStart = mod7(rand(11, 0, 6));
+        const topStep = [1, 2, -1][rand(12, 0, 2)];
+        for (let i = 0; i < 4; i++) {
+          let t = mod7(topStart + i * topStep);
+          sequence.push([t, mod7(t + offset)]);
+        }
+        const ansT = mod7(topStart + 4 * topStep);
+        answer = [ansT, mod7(ansT + offset)];
+
+        expEu = `Erlazioa: Beheko aldea beti da goikoa baino +${offset} handiagoa (mod 7).`;
+        expEs = `Relación: La mitad inferior es siempre la superior +${offset} (mód 7).`;
+        detailEu = `Behekoa = Goikoa + ${offset} ➔ [${answer[0]}/${answer[1]}]`;
+        detailEs = `Inferior = Superior + ${offset} ➔ [${answer[0]}/${answer[1]}]`;
+      }
+      else {
+        // Alternating
+        const t0 = mod7(rand(13, 0, 6));
+        const b0 = mod7(rand(14, 0, 6));
+        const t1 = mod7(rand(15, 0, 6));
+        const b1 = mod7(rand(16, 0, 6));
+        sequence = [
+          [t0, b0],
+          [t1, b1],
+          [mod7(t0 + 1), mod7(b0 + 2)],
+          [mod7(t1 - 1), mod7(b1 + 1)]
+        ];
+        answer = [mod7(t0 + 2), mod7(b0 + 4)];
+
+        expEu = `Serie alternoa: 1., 3. eta 5. fitxek arau bat dute (Goikoa +1, Behekoa +2).`;
+        expEs = `Serie alterna: Las fichas 1ª, 3ª y 5ª siguen una regla (Superior +1, Inferior +2).`;
+        detailEu = `Ficha bakoitiak: [${sequence[0].join('/')}] ➔ [${sequence[2].join('/')}] ➔ [${answer.join('/')}]`;
+        detailEs = `Fichas impares: [${sequence[0].join('/')}] ➔ [${sequence[2].join('/')}] ➔ [${answer.join('/')}]`;
+      }
+
+      // 4 Opciones distintas
+      let options = [answer];
+      const distractors = [
+        [answer[1], answer[0]],
+        [mod7(answer[0] + 1), answer[1]],
+        [answer[0], mod7(answer[1] + 1)],
+        [mod7(answer[0] - 1), mod7(answer[1] - 1)],
+        [mod7(answer[0] + 2), mod7(answer[1] + 2)]
+      ];
+      for (const d of distractors) {
+        if (options.length >= 4) break;
+        if (!options.some(o => o[0] === d[0] && o[1] === d[1])) options.push(d);
+      }
+      while (options.length < 4) {
+        let fake = [Math.floor(Math.random()*7), Math.floor(Math.random()*7)];
+        if (!options.some(o => o[0] === fake[0] && o[1] === fake[1])) options.push(fake);
+      }
+      // Shuffle options deterministically
+      options.sort(() => pseudo(99) - 0.5);
+
+      return {
+        id,
+        category,
+        sequence,
+        answer,
+        options,
+        expEu,
+        expEs,
+        detailEu,
+        detailEs
+      };
+    }
+
+    // --- 4. CONTROLADOR DE PRÁCTICA LIBRE ---
+    let currentPracticeQ = null;
+    let selectedPracticeCat = 'all';
+    let practiceAnswered = false;
+    let practiceSelectedIdx = null;
+    let practiceStats = { total: 0, correct: 0 };
+
+    function renderFilters() {
+      const t = I18N[currentLang];
+      const cats = [
+        { id: 'all', name: t.allCategories },
+        { id: 'independent', name: t.catIndep },
+        { id: 'snake', name: t.catSnake },
+        { id: 'sum', name: t.catSum },
+        { id: 'halves', name: t.catHalves },
+        { id: 'alt', name: t.catAlt }
+      ];
+
+      const cont = document.getElementById('filters-container');
+      cont.innerHTML = cats.map(c => `
+        <button class="filter-btn ${selectedPracticeCat === c.id ? 'active' : ''}" onclick="setPracticeCategory('${c.id}')">
+          ${c.name}
+        </button>
+      `).join('');
+    }
+
+    function setPracticeCategory(cat) {
+      selectedPracticeCat = cat;
+      renderFilters();
+      nextPracticeQuestion();
+    }
+
+    function nextPracticeQuestion() {
+      practiceAnswered = false;
+      practiceSelectedIdx = null;
+      document.getElementById('feedback-alert').style.display = 'none';
+      document.getElementById('explanation-box').style.display = 'none';
+
+      let qId;
+      if (selectedPracticeCat === 'all') {
+        qId = Math.floor(Math.random() * 600) + 1;
+      } else {
+        const catMap = { independent: 0, snake: 1, sum: 2, halves: 3, alt: 4 };
+        const rem = catMap[selectedPracticeCat];
+        const base = Math.floor(Math.random() * 120);
+        qId = base * 5 + rem + 1;
+      }
+
+      currentPracticeQ = buildQuestion(qId);
+      renderCurrentPracticeQuestion();
+    }
+
+    function renderCurrentPracticeQuestion() {
+      if (!currentPracticeQ) return;
+      const q = currentPracticeQ;
+      const t = I18N[currentLang];
+
+      document.getElementById('lbl-q-number').innerText = `${t.exercise} #${q.id.toString().padStart(3, '0')}`;
+      
+      const catNames = {
+        independent: t.catIndep,
+        snake: t.catSnake,
+        sum: t.catSum,
+        halves: t.catHalves,
+        alt: t.catAlt
+      };
+      document.getElementById('lbl-cat-badge').innerText = (catNames[q.category] || '').toUpperCase();
+
+      // Sequence stage
+      const stage = document.getElementById('sequence-stage');
+      stage.innerHTML = q.sequence.map((tile, i) => `
+        <div style="display:flex; flex-direction:column; align-items:center; gap:4px;">
+          ${createDominoSVG(tile[0], tile[1])}
+          <span style="font-size:10px; color:#94a3b8; font-weight:700;">#${i+1}</span>
+        </div>
+      `).join('') + `
+        <span class="arrow-sep">➔</span>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:4px;">
+          ${practiceAnswered ? createDominoSVG(q.answer[0], q.answer[1], false, 46, 90, 'correct') : createDominoSVG(0, 0, true, 46, 90)}
+          <span style="font-size:10px; color:${practiceAnswered ? '#16a34a' : '#2563eb'}; font-weight:800;">
+            ${practiceAnswered ? (currentLang === 'eu' ? '✓ Erantzuna' : '✓ Solución') : '?'}
+          </span>
+        </div>
+      `;
+
+      // 4 Options
+      const letters = ['A', 'B', 'C', 'D'];
+      const optCont = document.getElementById('options-container');
+      optCont.innerHTML = q.options.map((opt, i) => {
+        const isAnswer = opt[0] === q.answer[0] && opt[1] === q.answer[1];
+        const isChosen = i === practiceSelectedIdx;
+
+        let cardClass = 'option-card';
+        let svgStatus = '';
+        let badgeHtml = '';
+
+        if (practiceAnswered) {
+          if (isAnswer) {
+            cardClass += ' correct';
+            svgStatus = 'correct';
+            badgeHtml = `<span style="font-size:10px; font-weight:800; color:#166534; background:#bbf7d0; padding:2px 8px; border-radius:12px; margin-top:2px;">✓ ${currentLang === 'eu' ? 'ZUZENA' : 'SOLUCIÓN'}</span>`;
+          } else if (isChosen) {
+            cardClass += ' wrong';
+            svgStatus = 'wrong';
+            badgeHtml = `<span style="font-size:10px; font-weight:800; color:#991b1b; background:#fecaca; padding:2px 8px; border-radius:12px; margin-top:2px;">✗ ${currentLang === 'eu' ? 'OKERRA' : 'TU ELECCIÓN'}</span>`;
+          } else {
+            cardClass += ' dimmed';
+          }
+        }
+
+        return `
+          <div class="${cardClass}" id="opt-btn-${i}" onclick="selectPracticeOption(${i})">
+            <div class="option-letter">${letters[i]}</div>
+            ${createDominoSVG(opt[0], opt[1], false, 42, 84, svgStatus)}
+            ${badgeHtml}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function selectPracticeOption(idx) {
+      if (practiceAnswered) return;
+      practiceAnswered = true;
+      practiceSelectedIdx = idx;
+
+      const q = currentPracticeQ;
+      const t = I18N[currentLang];
+      const chosen = q.options[idx];
+      const isCorrect = chosen[0] === q.answer[0] && chosen[1] === q.answer[1];
+
+      practiceStats.total++;
+      if (isCorrect) practiceStats.correct++;
+
+      const pct = Math.round((practiceStats.correct / practiceStats.total) * 100);
+      document.getElementById('lbl-session-score').innerText = `${t.correct}: ${practiceStats.correct} / ${practiceStats.total} (${pct}%)`;
+
+      // Feedback alert
+      const fb = document.getElementById('feedback-alert');
+      fb.className = `feedback-box ${isCorrect ? 'correct' : 'wrong'}`;
+      document.getElementById('feedback-title').innerText = isCorrect ? t.correctFeedback : t.wrongFeedback;
+      document.getElementById('feedback-msg').innerText = '';
+
+      // Explanation
+      document.getElementById('explanation-text').innerText = currentLang === 'eu' ? q.expEu : q.expEs;
+      document.getElementById('explanation-detail').innerText = currentLang === 'eu' ? q.detailEu : q.detailEs;
+      document.getElementById('explanation-box').style.display = 'block';
+
+      // Re-render to show green and red styling on the cards
+      renderCurrentPracticeQuestion();
+    }
+
+    // --- 5. CONTROLADOR DE MODO EXAMEN (10 PREGUNTAS) ---
+    let examQuestions = [];
+    let examCurrentIdx = 0;
+    let examUserAnswers = [];
+    let examSeconds = 15 * 60;
+    let examTimerInt = null;
+
+    function startExam(count = 10) {
+      examQuestions = [];
+      for (let i = 0; i < count; i++) {
+        const rndId = Math.floor(Math.random() * 600) + 1;
+        examQuestions.push(buildQuestion(rndId));
+      }
+      examCurrentIdx = 0;
+      examUserAnswers = new Array(count).fill(null);
+      examSeconds = 15 * 60;
+
+      document.getElementById('exam-intro').style.display = 'none';
+      document.getElementById('exam-results').style.display = 'none';
+      document.getElementById('exam-runner').style.display = 'block';
+
+      if (examTimerInt) clearInterval(examTimerInt);
+      examTimerInt = setInterval(() => {
+        examSeconds--;
+        const m = Math.floor(examSeconds / 60).toString().padStart(2, '0');
+        const s = (examSeconds % 60).toString().padStart(2, '0');
+        document.getElementById('exam-timer').innerText = `${m}:${s}`;
+        if (examSeconds <= 0) finishExam();
+      }, 1000);
+
+      loadExamQuestion();
+    }
+
+    function loadExamQuestion() {
+      const q = examQuestions[examCurrentIdx];
+      const t = I18N[currentLang];
+      document.getElementById('lbl-exam-progress').innerText = `${t.exercise} ${examCurrentIdx + 1} / ${examQuestions.length}`;
+
+      const stage = document.getElementById('exam-sequence-stage');
+      stage.innerHTML = q.sequence.map((tile, i) => `
+        <div style="display:flex; flex-direction:column; align-items:center; gap:4px;">
+          ${createDominoSVG(tile[0], tile[1])}
+          <span style="font-size:10px; color:#94a3b8; font-weight:700;">#${i+1}</span>
+        </div>
+      `).join('') + `
+        <span class="arrow-sep">➔</span>
+        ${createDominoSVG(0, 0, true)}
+      `;
+
+      const letters = ['A', 'B', 'C', 'D'];
+      const optCont = document.getElementById('exam-options-container');
+      optCont.innerHTML = q.options.map((opt, i) => `
+        <div class="option-card ${examUserAnswers[examCurrentIdx] === i ? 'selected' : ''}" onclick="selectExamOption(${i})">
+          <div class="option-letter">${letters[i]}</div>
+          ${createDominoSVG(opt[0], opt[1], false, 42, 84)}
+        </div>
+      `).join('');
+    }
+
+    function selectExamOption(idx) {
+      examUserAnswers[examCurrentIdx] = idx;
+      loadExamQuestion();
+    }
+
+    function prevExamQ() {
+      if (examCurrentIdx > 0) {
+        examCurrentIdx--;
+        loadExamQuestion();
+      }
+    }
+
+    function nextExamQ() {
+      if (examCurrentIdx < examQuestions.length - 1) {
+        examCurrentIdx++;
+        loadExamQuestion();
+      } else {
+        finishExam();
+      }
+    }
+
+    function finishExam() {
+      clearInterval(examTimerInt);
+      let correct = 0;
+      examQuestions.forEach((q, i) => {
+        const userChoice = examUserAnswers[i];
+        if (userChoice !== null) {
+          const chosen = q.options[userChoice];
+          if (chosen[0] === q.answer[0] && chosen[1] === q.answer[1]) correct++;
+        }
+      });
+
+      document.getElementById('exam-runner').style.display = 'none';
+      document.getElementById('exam-results').style.display = 'block';
+      document.getElementById('exam-score-display').innerText = `${correct} / ${examQuestions.length}`;
+
+      const badge = document.getElementById('exam-grade-badge');
+      const t = I18N[currentLang];
+      if (correct >= 8) {
+        badge.innerText = t.gradeVeryGood;
+        badge.style.background = '#f0fdf4';
+        badge.style.color = '#166534';
+      } else if (correct >= 6) {
+        badge.innerText = t.gradeGood;
+        badge.style.background = '#eff6ff';
+        badge.style.color = '#1e40af';
+      } else if (correct >= 4) {
+        badge.innerText = t.gradeAvg;
+        badge.style.background = '#fefce8';
+        badge.style.color = '#854d0e';
+      } else {
+        badge.innerText = t.gradeLow;
+        badge.style.background = '#fef2f2';
+        badge.style.color = '#991b1b';
+      }
+    }
+
+    // --- 6. MODULO 7 CLOCK MODAL ---
+    let clockSelected = 6;
+    function renderClockSVG() {
+      const radius = 95;
+      const cx = 130;
+      const cy = 130;
+      const positions = [0, 1, 2, 3, 4, 5, 6].map((num, i) => {
+        const angle = (i * (360 / 7) - 90) * (Math.PI / 180);
+        return {
+          val: num,
+          x: cx + radius * Math.cos(angle),
+          y: cy + radius * Math.sin(angle)
+        };
+      });
+
+      const nodes = positions.map(p => {
+        const isSel = p.val === clockSelected;
+        return `
+          <g style="cursor:pointer" onclick="selectClockNode(${p.val})">
+            <circle cx="${p.x}" cy="${p.y}" r="18" fill="${isSel ? '#2563eb' : '#ffffff'}" stroke="${isSel ? '#1d4ed8' : '#94a3b8'}" stroke-width="2"/>
+            <text x="${p.x}" y="${p.y}" text-anchor="middle" dominant-baseline="central" fill="${isSel ? '#ffffff' : '#0f172a'}" font-size="14" font-weight="900">${p.val}</text>
+          </g>
+        `;
+      }).join('');
+
+      document.getElementById('clock-svg-box').innerHTML = `
+        <svg width="260" height="260">
+          <circle cx="${cx}" cy="${cy}" r="${radius}" fill="none" stroke="#e2e8f0" stroke-width="6" stroke-dasharray="3 3"/>
+          <text x="${cx}" y="${cy}" text-anchor="middle" dominant-baseline="central" fill="#94a3b8" font-size="12" font-weight="700">MOD 7</text>
+          ${nodes}
+        </svg>
+      `;
+    }
+
+    function selectClockNode(val) {
+      clockSelected = val;
+      renderClockSVG();
+      const n1 = mod7(val + 1);
+      const n2 = mod7(val + 2);
+      document.getElementById('clock-calc-result').innerText = `${val} + 1 = ${n1}  |  ${val} + 2 = ${n2}`;
+    }
+
+    function toggleClockModal() {
+      const modal = document.getElementById('clock-modal');
+      modal.classList.toggle('open');
+      if (modal.classList.contains('open')) {
+        renderClockSVG();
+        selectClockNode(6);
+      }
+    }
+
+    // --- 7. VISTAS Y NAVEGACIÓN ---
+    function switchView(view) {
+      document.getElementById('view-practice').style.display = view === 'practice' ? 'block' : 'none';
+      document.getElementById('view-exam').style.display = view === 'exam' ? 'block' : 'none';
+      document.getElementById('view-theory').style.display = view === 'theory' ? 'block' : 'none';
+
+      document.getElementById('tab-practice').className = view === 'practice' ? 'tab-btn active' : 'tab-btn';
+      document.getElementById('tab-exam').className = view === 'exam' ? 'tab-btn active' : 'tab-btn';
+      document.getElementById('tab-theory').className = view === 'theory' ? 'tab-btn active' : 'tab-btn';
+    }
+
+    // Inicializar
+    setLang('eu');
+    nextPracticeQuestion();
+  </script>
+</body>
+</html>
